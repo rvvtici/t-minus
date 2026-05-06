@@ -23,7 +23,7 @@ public class Lexer {
         this.code = new StringCharacterIterator(code); 
         afds = new ArrayList<>(); 
         
-        // Adicione seus autômatos aqui! A ordem importa.
+       
         afds.add(new OperadoresSimples());
       
     }
