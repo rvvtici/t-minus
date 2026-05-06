@@ -171,7 +171,7 @@ public class OperadoresSimples extends AFD {
 
 
 
-        return null; // Não é um operador conhecido por esta classe [cite: 206]
+        return null; // Não é um operador conhecido por esta classe
 
     }
 
