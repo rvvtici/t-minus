@@ -11,6 +11,10 @@ public class OperadoresSimples extends AFD {
     @Override
     public Token evaluate(CharacterIterator code) {
         char current = code.current();
+        
+        if (current == CharacterIterator.DONE) {
+            return new Token("EOF", "$");
+        }
 
         // 1. Operadores Lógicos && e || (Precisam ter o par exato)
         if (current == '&') {

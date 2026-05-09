@@ -27,6 +27,7 @@ public class Lexer {
         afds.add(new OperadoresSimples());
         afds.add(new Numeros());
         afds.add(new Identificadores());
+        afds.add(new Mensagens ());
       
     }
    // Método para pular espaços em branco, quebras de linha e tabs
@@ -56,25 +57,22 @@ public class Lexer {
     }
 
     // O método principal que vai ler o código inteiro e devolver a lista de tokens
+   // Método que faz a quebra de uma sentença em lexemas
     public List<Token> getTokens() {
         Token t;
         do {
             skipWhiteSpace();
-            
-            // Condição de parada de segurança para não dar loop infinito no final da string
-            if (code.current() == CharacterIterator.DONE) {
-                tokens.add(new Token("EOF", "$"));
-                break;
-            }
-            
             t = searchNextToken();
-            if (t == null) error(); // Se nenhum autômato reconheceu, dispara o erro
+            
+            if (t == null) {
+                error();
+            }
             
             tokens.add(t);
             
-        } while (code.current() != CharacterIterator.DONE);
+        } while (!t.tipo.equals("EOF"));
         
         return tokens;
-    } 
+    }
    
 }
