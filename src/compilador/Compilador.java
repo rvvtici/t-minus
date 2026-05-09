@@ -6,8 +6,7 @@ public class Compilador {
 
     public static void main(String[] args) {
         // Testando os números e operadores juntos!
-        String codigoTeste = "100 27.5 9.8f 9460730472580800L 127b 360s == 20.0";
-
+        String codigoTeste = "acesso livre nave APOLO abortar_teste iniciar_missao maior_que menor_que maior_igual_que menor_igual_que transmitir capturar retornar trajeto recalcular abortar percorrer orbita iniciar_missao ativo inativo Unidade Precisao Estimativa Distancia Eco Carga Pulso Sinal Mensagem";
         System.out.println("Iniciando a bateria de validação do Lexer...\n");
 
         Lexer lexer = new Lexer(codigoTeste);

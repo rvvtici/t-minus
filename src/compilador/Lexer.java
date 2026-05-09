@@ -26,6 +26,7 @@ public class Lexer {
         // Adicione seus autômatos aqui! A ordem importa.
         afds.add(new OperadoresSimples());
         afds.add(new Numeros());
+        afds.add(new Identificadores());
       
     }
    // Método para pular espaços em branco, quebras de linha e tabs
