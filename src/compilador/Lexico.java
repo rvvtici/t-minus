@@ -2,7 +2,7 @@ package compilador;
 
 import java.util.List;
 
-public class Compilador {
+public class Lexico {
 
     public static void main(String[] args) {
         // Um script completo da T-minus para testar o sistema inteiro!
