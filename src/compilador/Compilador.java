@@ -2,15 +2,11 @@ package compilador;
 
 import java.util.List;
 
-/**
- *
- * @author uniflferreira
- */
 public class Compilador {
 
     public static void main(String[] args) {
-        // String ajustada com todos os operadores da T-minus e um comentário no final
-        String codigoTeste = "<< >> < > => ++ -- += -= *= /= + - * / % == != && || ! // testando tudo";
+        // Testando os números e operadores juntos!
+        String codigoTeste = "100 27.5 9.8f 9460730472580800L 127b 360s == 20.0";
 
         System.out.println("Iniciando a bateria de validação do Lexer...\n");
 
