@@ -4,9 +4,8 @@ import java.util.List;
 
 /** ANALISADOR SINTÁTICO - Método: Descida Recursiva (LL)  
  *
- * Cada método parseXxx() corresponde a uma regra da GLC e devolve
- * um nó da AST. Produções vazias (ε) devolvem null — o método add()
- * de Node ignora nulos, mantendo a árvore limpa.
+ * Cada método parse() corresponde a uma regra da GLC e devolve um nó da AST. 
+ * Produções vazias (ε) devolvem null — o método add() de Node ignora nulos, mantendo a árvore limpa.
  *
  * ── TOKENS ESPERADOS DO LEXER ────────────────────────────────────
  *  Tipo            | Exemplos de lexema
@@ -26,11 +25,11 @@ import java.util.List;
  *  res_abortar     | "abortar"
  *  res_percorrer   | "percorrer"
  *  res_orbita      | "orbita"
- *  op_atrib        | "="  (gerado por OperadoresSimples)
+ *  op_atrib        | "=>"  (gerado por OperadoresSimples)
  *  op_soma         | "+" | "-"
  *  op_mult         | "*" | "/" | "%"
  *  op_pot          | "**"
- *  op_rel          | "==" | "!=" | "maior_que" | "menor_que" |
+ *  op_rel          | "==>" | "!=" | "maior_que" | "menor_que" |
  *                  |  "maior_igual_que" | "menor_igual_que"
  *  op_log_e        | "&&"
  *  op_log_ou       | "||"
@@ -53,21 +52,16 @@ import java.util.List;
  *  com_passo       | "com passo"
  *  EOF             | ""
  * ─────────────────────────────────────────────────────────────────
- *
- * NOTA sobre "de", "ate", "com passo":
- *   A gramática do percorrer usa palavras-chave que o Lexer atual
- *   não lista explicitamente. Se o Lexer as tokenizar como id_var,
- *   as constantes abaixo precisam apontar para "id_var" (preciso ajustar depois)
  */
 
 public class Parser {
 
-    // ── Estado interno ────────────────────────────────────────────
+    // Estado interno
     private final List<Token> tokens;
     private int pos;          // índice do token corrente
     private Token corrente;   // token corrente (lookahead)
 
-    // ── Tipos de token — centralizados para facilitar manutenção ──
+    // Tipos de token — centralizados para facilitar manutenção 
     private static final String MOD_ACESSO   = "mod_acesso";
     private static final String RES_NAVE     = "res_nave";
     private static final String ID_NAVE      = "id_nave";
@@ -106,11 +100,12 @@ public class Parser {
     private static final String EOF          = "EOF";
 
     // Palavras-chave do percorrer (ajustar)
-    private static final String KW_DE        = "id_var";   // lexema "de"
-    private static final String KW_ATE       = "id_var";   // lexema "ate"
-    private static final String KW_COM_PASSO = "id_var";   // lexema "com"
+    private static final String KW_DE        = "res_de";   // lexema "de"
+    private static final String KW_ATE       = "res_ate";   // lexema "ate"
+    private static final String KW_COM = "res_com";   // lexema "com"
+    private static final String KW_PASSO = "res_passo";   // lexema "passo"
 
-    // ── Construtor ────────────────────────────────────────────────
+    // Construtor 
     public Parser(List<Token> tokens) {
         this.tokens   = tokens;
         this.pos      = 0;
@@ -118,30 +113,22 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  UTILITÁRIOS
+    //  UTILITÁRIOS BASE
     // ══════════════════════════════════════════════════════════════
 
-    /** Avança para o próximo token e devolve o que foi consumido. */
+    // Avança para o próximo token e devolve o que foi consumido
     private Token avancar() {
         Token t = corrente;
         if (pos + 1 < tokens.size()) corrente = tokens.get(++pos);
         return t;
     }
 
-    /** Verifica se o token corrente tem o tipo esperado (sem consumir). */
+    // Verifica se o token corrente tem o tipo esperado (sem consumir)
     private boolean verifica(String tipo) {
         return corrente.tipo.equals(tipo);
     }
 
-    /** Verifica tipo E lexema (sem consumir). */
-    private boolean verificaLexema(String tipo, String lexema) {
-        return corrente.tipo.equals(tipo) && corrente.lexema.equals(lexema);
-    }
-
-    /**
-     * Consome o token corrente se o tipo bate; lança erro caso contrário.
-     * Devolve um nó folha com o token consumido.
-     */
+    // Consome o token se o tipo bate e lança erro caso contrário. Devolve um nó folha com o token consumido
     private Node consome(String tipo) {
         if (!verifica(tipo)) {
             erro("Esperado <" + tipo + ">, encontrado <"
@@ -151,31 +138,17 @@ public class Parser {
         return new Node(t.tipo, t.lexema);
     }
 
-    /**
-     * Consome o token corrente verificando tipo E lexema.
-     * Usado para keywords que compartilham um mesmo tipo (ex: "de", "ate").
-     */
-    private Node consumeLexema(String tipo, String lexema) {
-        if (!verificaLexema(tipo, lexema)) {
-            erro("Esperado <" + tipo + ", \"" + lexema + "\">, encontrado <"
-                    + corrente.tipo + ", " + corrente.lexema + ">");
-        }
-        Token t = avancar();
-        return new Node(t.tipo, t.lexema);
-    }
-
+    // Lança um erro sintático com a mensagem dada, incluindo o número do token onde ocorreu (para debugging)
     private void erro(String msg) {
         throw new RuntimeException("[Parser] Erro sintático: " + msg
                 + "  (token #" + pos + ")");
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  1. PONTO DE ENTRADA
+    //  PONTO DE ENTRADA
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * prog → mod_acesso 'nave' id_nave '{' bloco '}'
-     */
+    // prog → mod_acesso 'nave' id_nave '{' bloco '}'
     public Node parseProg() {
         Node no = new Node("prog");
         no.add(consome(MOD_ACESSO));
@@ -189,15 +162,12 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  2. BLOCO DE COMANDOS
+    //  BLOCO DE COMANDOS
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * bloco → cmd bloco | cmd
-     *
-     * Produz um nó "bloco" com N filhos — um por comando.
-     * Para quando encontrar '}' ou EOF.
-     */
+    // bloco → cmd bloco | cmd
+    // Produz um nó "bloco" com N filhos — um por comando. Para quando encontrar '}' ou EOF.
+    
     private Node parseBloco() {
         Node no = new Node("bloco");
         while (!verifica(FECHA_TRANSM) && !verifica(EOF)) {
@@ -207,14 +177,13 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  3. COMANDO (dispatcher por lookahead)
+    //  COMANDO (dispatcher por lookahead)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmd → cmdTransmitir | cmdCapturar | cmdDeclarar | cmdCondicao
-     *       | cmdPercorrer | cmdOrbita | cmdFuncaoMain | cmdFuncao
-     *       | cmdChamada   | cmdRetorno
-     */
+    // cmd → cmdTransmitir | cmdCapturar | cmdDeclarar | cmdCondicao
+    //      | cmdPercorrer | cmdOrbita | cmdFuncaoMain | cmdFuncao
+    //      | cmdChamada   | cmdRetorno
+     
     private Node parseCmd() {
         // ── retornar ──────────────────────────────────────────────
         if (verifica(RES_RETORNO))     return parseCmdRetorno();
@@ -251,13 +220,10 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  4. TRANSMITIR  (System.out.println)
+    //  TRANSMITIR  (System.out.println)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdTransmitir → 'transmitir' '(' conteudo ')'
-     * conteudo → MENSAGEM | expr | MENSAGEM '+' expr
-     */
+    // cmdTransmitir → 'transmitir' '(' conteudo ')'   
     private Node parseCmdTransmitir() {
         Node no = new Node("cmdTransmitir");
         no.add(consome(RES_TRANSM));
@@ -267,6 +233,7 @@ public class Parser {
         return no;
     }
 
+    // conteudo → MENSAGEM | expr | MENSAGEM '+' expr
     private Node parseConteudo() {
         Node no = new Node("conteudo");
         if (verifica(MENSAGEM)) {
@@ -283,21 +250,20 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  5. CAPTURAR  (Scanner)
+    //  CAPTURAR  (Scanner)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdCapturar → tipo id_var '=' 'capturar'
-     *             | id_var '=' 'capturar'
-     *
-     * Esta regra é chamada de dois contextos:
-     *  a) diretamente quando o lookahead já é 'capturar'
-     *  b) após consumir tipo+id_var dentro de parseTipoOuFuncao
-     *  c) após consumir id_var dentro de parseCmdChamadaOuCapturar
-     *
-     * O parser "por fora" resolve a ambiguidade; aqui chegamos
-     * depois que tipo/id_var já foram lidos e passados como parâmetro.
-     */
+    // cmdCapturar → tipo id_var '=' 'capturar'
+    //             | id_var '=' 'capturar'
+     
+    // Esta regra é chamada:
+    //  a) diretamente quando o lookahead já é 'capturar'
+    //  b) após consumir tipo+id_var dentro de parseTipoOuFuncao
+    //  c) após consumir id_var dentro de parseCmdChamadaOuCapturar
+    //
+    // O parser "por fora" resolve a ambiguidade
+    //
+
     private Node parseCmdCapturar() {
         // chamado quando lookahead == RES_CAPTURAR (sem prefixo)
         Node no = new Node("cmdCapturar");
@@ -305,9 +271,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * Monta nó cmdCapturar a partir de peças já consumidas (tipo ou id_var).
-     */
+    // Monta nó cmdCapturar a partir de peças já consumidas (tipo ou id_var).
     private Node montaCmdCapturar(Node prefixo, Node idVar) {
         Node no = new Node("cmdCapturar");
         no.add(prefixo);     // tipo ou null
@@ -318,16 +282,15 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  6. DECLARAR / FUNÇÃO  (começa com 'tipo')
+    //  DECLARAR / FUNÇÃO  (começa com 'tipo')
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * Após ver 'tipo' no lookahead, decide entre:
-     *   • cmdDeclarar   →  tipo id_var '=' expr|MENSAGEM|lit_bool
-     *   • cmdDeclarar   →  tipo id_var  (sem atribuição)
-     *   • cmdCapturar   →  tipo id_var '=' 'capturar'
-     *   • cmdFuncao     →  tipo id_var '(' params ')' '{' bloco '}'
-     */
+    // Após ver 'tipo' no lookahead, decide entre:
+    //   cmdDeclarar   →  tipo id_var '=' expr|MENSAGEM|lit_bool
+    //   cmdDeclarar   →  tipo id_var  (sem atribuição)
+    //   cmdCapturar   →  tipo id_var '=' 'capturar'
+    //   cmdFuncao     →  tipo id_var '(' params ')' '{' bloco '}'
+   
     private Node parseTipoOuFuncao() {
         Node noTipo  = consome(TIPO);
         Node noIdVar = consome(ID_VAR);
@@ -346,26 +309,15 @@ public class Parser {
             no.add(consome(OP_ATRIB));
             // capturar?
             if (verifica(RES_CAPTURAR)) {
-                // transforma em cmdCapturar com prefixo
-                Node cap = new Node("cmdCapturar");
-                cap.add(noTipo);
-                cap.add(noIdVar);
-                // op_atrib já foi adicionado ao 'no', mas vamos refazer limpo:
-                Node capLimpo = new Node("cmdCapturar");
-                capLimpo.add(noTipo);
-                capLimpo.add(noIdVar);
-                capLimpo.add(consome(RES_CAPTURAR));
-                return capLimpo;
+              return montaCmdCapturar(noTipo, noIdVar);
             }
             no.add(parseValorInicializador());
         }
         return no;
     }
 
-    /**
-     * Valor após '=' numa declaração:
-     * MENSAGEM | lit_bool | expr
-     */
+    // Valor após '=>' numa declaração:
+    // MENSAGEM | lit_bool | expr    
     private Node parseValorInicializador() {
         if (verifica(MENSAGEM))  return consome(MENSAGEM);
         if (verifica(LIT_BOOL))  return consome(LIT_BOOL);
@@ -373,12 +325,10 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  7. CONDICIONAL  (trajeto / recalcular / abortar)
+    //  CONDICIONAL  (trajeto / recalcular / abortar)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdCondicao → 'trajeto' '(' exprRel ')' '{' bloco '}' cmdCondicaoElse
-     */
+    // cmdCondicao → 'trajeto' '(' exprRel ')' '{' bloco '}' cmdCondicaoElse
     private Node parseCmdCondicao() {
         Node no = new Node("cmdCondicao");
         no.add(consome(RES_COND));
@@ -392,11 +342,9 @@ public class Parser {
         return no;
     }
 
-    /**
-     * cmdCondicaoElse → 'recalcular' cmdCondicao
-     *                 | 'abortar' '{' bloco '}'
-     *                 | ε
-     */
+    // cmdCondicaoElse → 'recalcular' cmdCondicao
+    //                 | 'abortar' '{' bloco '}'
+    //                 | ε
     private Node parseCmdCondicaoElse() {
         if (verifica(RES_RECALC)) {
             Node no = new Node("cmdCondicaoElse");
@@ -416,27 +364,25 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  8. PERCORRER  (for)
+    //  PERCORRER  (for)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdPercorrer → 'percorrer' '(' tipo 'de' id_var expr 'ate' expr 'com passo' expr ')' '{' bloco '}'
-     *
-     * PONTO DE ATENÇÃO: "de", "ate" e "com" são lexemas do tipo id_var no Lexer atual.
-     * Se o Lexer vier a emitir um tipo dedicado, trocar KW_DE/KW_ATE/KW_COM_PASSO.
-     */
+    // cmdPercorrer → 'percorrer' '(' tipo 'de' id_var expr 'ate' expr 'com passo' expr ')' '{' bloco '}'
+    // PONTO DE ATENÇÃO: "de", "ate" e "com" são lexemas do tipo id_var no Lexer atual.
+    // Se o Lexer vier a emitir um tipo dedicado, trocar KW_DE/KW_ATE/KW_COM_PASSO.
+    
     private Node parseCmdPercorrer() {
         Node no = new Node("cmdPercorrer");
         no.add(consome(RES_PERCORR));
         no.add(consome(ABRE_CMD));
         no.add(consome(TIPO));
-        consumeLexema(KW_DE, "de");           // keyword "de"
+        consome(KW_DE); 
         no.add(consome(ID_VAR));
         no.add(parseExpr());                  // valor inicial
-        consumeLexema(KW_ATE, "ate");         // keyword "ate"
+        consome(KW_ATE);         
         no.add(parseExpr());                  // valor final
-        consumeLexema(KW_COM_PASSO, "com");   // keyword "com"
-        consumeLexema(KW_COM_PASSO, "passo"); // keyword "passo"
+        consome(KW_COM);   
+        consome(KW_PASSO); 
         no.add(parseExpr());                  // passo
         no.add(consome(FECHA_CMD));
         no.add(consome(ABRE_TRANSM));
@@ -446,12 +392,10 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  9. ORBITA  (while)
+    //  ORBITA  (while)
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdOrbita → 'orbita' '(' tipo id_var exprRel ')' '{' bloco '}'
-     */
+    // cmdOrbita → 'orbita' '(' tipo id_var exprRel ')' '{' bloco '}'
     private Node parseCmdOrbita() {
         Node no = new Node("cmdOrbita");
         no.add(consome(RES_ORBITA));
@@ -467,14 +411,12 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  10. FUNÇÕES
+    //  FUNÇÕES
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdFuncaoMain → mod_acesso 'iniciar_missao' '(' params ')'
-     *
-     * Versão com mod_acesso explícito no fluxo de parseCmd.
-     */
+    // cmdFuncaoMain → mod_acesso 'iniciar_missao' '(' params ')'
+    // Versão com mod_acesso explícito no fluxo de parseCmd.
+    
     private Node parseCmdFuncaoMainComMod() {
         Node no = new Node("cmdFuncaoMain");
         no.add(consome(MOD_ACESSO));
@@ -488,9 +430,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * Versão sem mod_acesso (lookahead já é RES_INICIAR).
-     */
+    // versão sem mod_acesso (lookahead já é RES_INICIAR).
     private Node parseCmdFuncaoMain() {
         Node no = new Node("cmdFuncaoMain");
         no.add(consome(RES_INICIAR));
@@ -503,10 +443,8 @@ public class Parser {
         return no;
     }
 
-    /**
-     * cmdFuncao → tipo id_var '(' params ')' '{' bloco '}'
-     * (tipo e id_var já foram consumidos por parseTipoOuFuncao)
-     */
+    // cmdFuncao → tipo id_var '(' params ')' '{' bloco '}'
+    // (tipo e id_var já foram consumidos por parseTipoOuFuncao)
     private Node montaCmdFuncao(Node noTipo, Node noIdVar) {
         Node no = new Node("cmdFuncao");
         no.add(noTipo);
@@ -520,10 +458,8 @@ public class Parser {
         return no;
     }
 
-    /**
-     * params → tipo id_var params_aux | ε
-     * params_aux → ',' tipo id_var params_aux | ε
-     */
+    // params → tipo id_var params_aux | ε
+    // params_aux → ',' tipo id_var params_aux | ε
     private Node parseParams() {
         Node no = new Node("params");
         if (!verifica(TIPO)) return no; // ε — lista vazia
@@ -538,14 +474,12 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  11. CHAMADA DE FUNÇÃO / CAPTURAR por id_var
+    //  CHAMADA DE FUNÇÃO / CAPTURAR por id_var
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * Chamado quando o lookahead é id_var. Pode ser:
-     *   • id_var '(' args ')'          → cmdChamada
-     *   • id_var '=' 'capturar'        → cmdCapturar (sem tipo)
-     */
+    // Chamado quando o lookahead é id_var. Pode ser:
+    //   id_var '(' args ')'          → cmdChamada
+    //   id_var '=' 'capturar'        → cmdCapturar (sem tipo)
     private Node parseCmdChamadaOuCapturar() {
         Node noId = consome(ID_VAR);
 
@@ -562,12 +496,7 @@ public class Parser {
         if (verifica(OP_ATRIB)) {
             Node noAtrib = consome(OP_ATRIB);
             if (verifica(RES_CAPTURAR)) {
-                // id_var = capturar
-                Node cap = new Node("cmdCapturar");
-                cap.add(noId);
-                cap.add(noAtrib);
-                cap.add(consome(RES_CAPTURAR));
-                return cap;
+                return montaCmdCapturar(noId, null);
             }
             // Atribuição simples: id_var = expr  (extensão natural, não conflita)
             Node atr = new Node("cmdAtribuicao");
@@ -581,10 +510,8 @@ public class Parser {
         return null;
     }
 
-    /**
-     * args → expr args_aux | ε
-     * args_aux → ',' expr args_aux | ε
-     */
+    // args → expr args_aux | ε
+    // args_aux → ',' expr args_aux | ε
     private Node parseArgs() {
         Node no = new Node("args");
         if (verifica(FECHA_CMD)) return no; // ε
@@ -597,16 +524,15 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  12. RETORNO
+    //  RETORNO
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * cmdRetorno → 'retornar' expr
-     *            | 'retornar' id_var
-     *            | 'retornar' lit_bool
-     *            | 'retornar' MENSAGEM
-     *            | 'retornar'
-     */
+    // cmdRetorno → 'retornar' expr
+    //            | 'retornar' id_var
+    //            | 'retornar' lit_bool
+    //            | 'retornar' MENSAGEM
+    //            | 'retornar'
+    
     private Node parseCmdRetorno() {
         Node no = new Node("cmdRetorno");
         no.add(consome(RES_RETORNO));
@@ -623,13 +549,11 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  13. EXPRESSÕES ARITMÉTICAS
-    //      Precedência (menor → maior): + - → * / % → unário - → **
+    //  EXPRESSÕES ARITMÉTICAS
+    //  Precedência (menor → maior): + - → * / % → unário - → **
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * expr → termo expr_linha
-     */
+    // expr → termo expr_linha
     private Node parseExpr() {
         Node no = new Node("expr");
         no.add(parseTermo());
@@ -637,9 +561,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * expr_linha → op_soma termo expr_linha | ε
-     */
+    // expr_linha → op_soma termo expr_linha | ε
     private Node parseExprLinha() {
         if (verifica(OP_SOMA)) {
             Node no = new Node("expr_linha");
@@ -651,9 +573,7 @@ public class Parser {
         return null; // ε
     }
 
-    /**
-     * termo → fator termo_linha
-     */
+    // termo → fator termo_linha
     private Node parseTermo() {
         Node no = new Node("termo");
         no.add(parseFator());
@@ -661,9 +581,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * termo_linha → op_mult fator termo_linha | ε
-     */
+    // termo_linha → op_mult fator termo_linha | ε
     private Node parseTermoLinha() {
         if (verifica(OP_MULT)) {
             Node no = new Node("termo_linha");
@@ -675,9 +593,7 @@ public class Parser {
         return null; // ε
     }
 
-    /**
-     * fator → fator_base fator_pot
-     */
+    // fator → fator_base fator_pot
     private Node parseFator() {
         Node no = new Node("fator");
         no.add(parseFatorBase());
@@ -685,9 +601,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * fator_pot → '**' fator | ε
-     */
+    // fator_pot → '**' fator | ε
     private Node parseFatorPot() {
         if (verifica(OP_POT)) {
             Node no = new Node("fator_pot");
@@ -698,13 +612,13 @@ public class Parser {
         return null; // ε
     }
 
-    /**
-     * fator_base → tipo_num | id_var | '(' expr ')' | '-' fator
-     */
+    // fator_base → tipo_num | id_var | '(' expr ')' | '-' fator
     private Node parseFatorBase() {
         // Numérico
         if (isNumero()) {
-            return new Node("tipo_num", corrente.lexema) {{ avancar(); }};
+            Node no = new Node("tipo_num", corrente.lexema);
+            avancar();
+            return no;        
         }
         // Identificador de variável
         if (verifica(ID_VAR)) return consome(ID_VAR);
@@ -734,13 +648,11 @@ public class Parser {
     }
 
     // ══════════════════════════════════════════════════════════════
-    //  14. EXPRESSÕES RELACIONAIS / LÓGICAS
-    //      Precedência: ! > && > ||
+    //  EXPRESSÕES RELACIONAIS / LÓGICAS
+    //  Precedência: ! > && > ||
     // ══════════════════════════════════════════════════════════════
 
-    /**
-     * exprRel → termoLogico exprRel_linha
-     */
+    // exprRel → termoLogico exprRel_linha
     private Node parseExprRel() {
         Node no = new Node("exprRel");
         no.add(parseTermoLogico());
@@ -748,9 +660,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * exprRel_linha → op_log_ou termoLogico exprRel_linha | ε
-     */
+    // exprRel_linha → op_log_ou termoLogico exprRel_linha | ε
     private Node parseExprRelLinha() {
         if (verifica(OP_LOG_OU)) {
             Node no = new Node("exprRel_linha");
@@ -762,9 +672,7 @@ public class Parser {
         return null; // ε
     }
 
-    /**
-     * termoLogico → fatorLogico termoLogico_linha
-     */
+    // termoLogico → fatorLogico termoLogico_linha
     private Node parseTermoLogico() {
         Node no = new Node("termoLogico");
         no.add(parseFatorLogico());
@@ -772,9 +680,7 @@ public class Parser {
         return no;
     }
 
-    /**
-     * termoLogico_linha → op_log_e fatorLogico termoLogico_linha | ε
-     */
+    // termoLogico_linha → op_log_e fatorLogico termoLogico_linha | ε
     private Node parseTermoLogicoLinha() {
         if (verifica(OP_LOG_E)) {
             Node no = new Node("termoLogico_linha");
@@ -786,9 +692,7 @@ public class Parser {
         return null; // ε
     }
 
-    /**
-     * fatorLogico → '!' exprComp | exprComp
-     */
+    // fatorLogico → '!' exprComp | exprComp
     private Node parseFatorLogico() {
         if (verifica(OP_NEG)) {
             Node no = new Node("fatorLogico");
@@ -799,9 +703,7 @@ public class Parser {
         return parseExprComp();
     }
 
-    /**
-     * exprComp → expr op_rel expr | expr
-     */
+    // exprComp → expr op_rel expr | expr
     private Node parseExprComp() {
         Node no = new Node("exprComp");
         no.add(parseExpr());

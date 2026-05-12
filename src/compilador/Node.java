@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Representa um nó da Árvore Sintática Abstrata (AST) da linguagem T-minus.
+ * Representa um nó da Árvore Sintática Abstrata (AST) gerada pelo parser. Cada nó pode ser um símbolo terminal (token) ou um símbolo não-terminal (regra gramatical). A estrutura é recursiva, permitindo representar a hierarquia da linguagem de forma clara e navegável.
  *
  * Cada nó possui:
  *  - tipo    : identifica a regra gramatical ou terminal (ex: "prog", "cmdTransmitir", "id_var")
@@ -17,26 +17,26 @@ public class Node {
     public final String valor;           // null em nós internos
     public final List<Node> filhos;
 
-    // ── Construtor para nós INTERNOS (regras gramaticais) ──────────────────────
+    // Construtor para nós internos (regras gramaticais)
     public Node(String tipo) {
         this.tipo   = tipo;
-        this.valor  = null;
+        this.valor  = null; // Nós internos não têm valor, apenas tipo e filhos
         this.filhos = new ArrayList<>();
     }
 
-    // ── Construtor para nós FOLHA (terminais) ─────────────────────────────────
+    // Construtor para nós folha (terminal) 
     public Node(String tipo, String valor) {
         this.tipo   = tipo;
         this.valor  = valor;
         this.filhos = new ArrayList<>();
     }
 
-    // ── Adiciona um filho (ignora nulos – ε-produções não geram nós) ──────────
+    // Adiciona um filho (ignora nulos – ε-produções não geram nós)
     public void add(Node filho) {
         if (filho != null) filhos.add(filho);
     }
 
-    // ── Impressão identada da árvore (útil para debug) ────────────────────────
+    // Impressão identada da árvore (útil para debug)
     public void imprimir(String prefixo, boolean ultimo) {
         String conector = ultimo ? "└── " : "├── ";
         String descricao = valor != null
@@ -50,7 +50,7 @@ public class Node {
         }
     }
 
-    /** Atalho: imprime a árvore a partir da raiz. */
+    // Atalho: imprime a árvore a partir da raiz.
     public void imprimir() {
         System.out.println("<" + tipo + ">");
         for (int i = 0; i < filhos.size(); i++) {
