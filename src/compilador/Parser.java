@@ -99,11 +99,12 @@ public class Parser {
     private static final String LIT_BOOL     = "lit_bool";
     private static final String EOF          = "EOF";
 
-    // Palavras-chave do percorrer (ajustar)
+    // Palavras-chave do percorrer e orbita
     private static final String KW_DE        = "res_de";   // lexema "de"
     private static final String KW_ATE       = "res_ate";   // lexema "ate"
     private static final String KW_COM = "res_com";   // lexema "com"
     private static final String KW_PASSO = "res_passo";   // lexema "passo"
+    private static final String KW_ONDE = "res_onde";
 
     // Construtor 
     public Parser(List<Token> tokens) {
@@ -276,7 +277,6 @@ public class Parser {
         Node no = new Node("cmdCapturar");
         no.add(prefixo);     // tipo ou null
         no.add(idVar);       // id_var
-        no.add(consome(OP_ATRIB));
         no.add(consome(RES_CAPTURAR));
         return no;
     }
@@ -291,28 +291,32 @@ public class Parser {
     //   cmdCapturar   →  tipo id_var '=' 'capturar'
     //   cmdFuncao     →  tipo id_var '(' params ')' '{' bloco '}'
    
-    private Node parseTipoOuFuncao() {
+   private Node parseTipoOuFuncao() {
         Node noTipo  = consome(TIPO);
         Node noIdVar = consome(ID_VAR);
 
-        // É uma função?
         if (verifica(ABRE_CMD)) {
             return montaCmdFuncao(noTipo, noIdVar);
         }
 
-        // É declaração / capturar
+        if (verifica(OP_ATRIB)) {
+            // capturar? — checa ANTES de consumir o =>
+            Node noAtrib = consome(OP_ATRIB);
+            if (verifica(RES_CAPTURAR)) {
+                return montaCmdCapturar(noTipo, noIdVar); // montaCmdCapturar consome o capturar
+            }
+            Node no = new Node("cmdDeclarar");
+            no.add(noTipo);
+            no.add(noIdVar);
+            no.add(noAtrib);
+            no.add(parseValorInicializador());
+            return no;
+        }
+
+        // sem atribuição
         Node no = new Node("cmdDeclarar");
         no.add(noTipo);
         no.add(noIdVar);
-
-        if (verifica(OP_ATRIB)) {
-            no.add(consome(OP_ATRIB));
-            // capturar?
-            if (verifica(RES_CAPTURAR)) {
-              return montaCmdCapturar(noTipo, noIdVar);
-            }
-            no.add(parseValorInicializador());
-        }
         return no;
     }
 
@@ -402,6 +406,7 @@ public class Parser {
         no.add(consome(ABRE_CMD));
         no.add(consome(TIPO));
         no.add(consome(ID_VAR));
+        consome(KW_ONDE);             
         no.add(parseExprRel());
         no.add(consome(FECHA_CMD));
         no.add(consome(ABRE_TRANSM));
@@ -614,15 +619,24 @@ public class Parser {
 
     // fator_base → tipo_num | id_var | '(' expr ')' | '-' fator
     private Node parseFatorBase() {
-        // Numérico
         if (isNumero()) {
             Node no = new Node("tipo_num", corrente.lexema);
             avancar();
-            return no;        
+            return no;
         }
-        // Identificador de variável
-        if (verifica(ID_VAR)) return consome(ID_VAR);
-        // Expressão parentesada
+        if (verifica(ID_VAR)) {
+            Node noId = consome(ID_VAR);
+            // chamada de função dentro de expressão?
+            if (verifica(ABRE_CMD)) {
+                Node no = new Node("cmdChamada");
+                no.add(noId);
+                no.add(consome(ABRE_CMD));
+                no.add(parseArgs());
+                no.add(consome(FECHA_CMD));
+                return no;
+            }
+            return noId;
+        }
         if (verifica(ABRE_CMD)) {
             Node no = new Node("fator_base");
             no.add(consome(ABRE_CMD));
@@ -630,7 +644,6 @@ public class Parser {
             no.add(consome(FECHA_CMD));
             return no;
         }
-        // Menos unário
         if (verifica(OP_SOMA) && corrente.lexema.equals("-")) {
             Node no = new Node("fator_base");
             no.add(consome(OP_SOMA));

@@ -37,6 +37,7 @@ public class Identificadores extends AFD { // Reconhece palavras reservadas, ide
         palavrasReservadas.put("ate",   "res_ate");
         palavrasReservadas.put("com",   "res_com");
         palavrasReservadas.put("passo", "res_passo");
+        palavrasReservadas.put("onde", "res_onde");
 
         // Operadores Relacionais (t-minus trata em formato de texto)
         palavrasReservadas.put("maior_que", "op_rel");
