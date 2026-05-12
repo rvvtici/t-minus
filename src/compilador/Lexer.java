@@ -1,37 +1,29 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
+
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator; 
 import java.util.ArrayList;
 import java.util.List; 
 
-/**
- *
- * @author uniflferreira
- */
+public class Lexer { // O Lexer é a classe principal que vai ler o código fonte e usar os autômatos (AFDs) para quebrar o código em tokens. Ele mantém uma lista de tokens reconhecidos, uma lista de AFDs para testar e um iterador de caracteres para percorrer o código.
+    private final List<Token> tokens;
+    private final List<AFD> afds; 
+    private final CharacterIterator code; 
 
-public class Lexer { 
-    private List<Token> tokens; 
-    private List<AFD> afds; 
-    private CharacterIterator code; 
-
-    public Lexer(String code) { 
+    public Lexer(String code) {  // O construtor do Lexer recebe o código fonte como string, inicializa a lista de tokens, o iterador de caracteres e a lista de AFDs com os autômatos que criamos para reconhecer os diferentes tipos de tokens.
         tokens = new ArrayList<>(); 
         this.code = new StringCharacterIterator(code); 
         afds = new ArrayList<>(); 
         
-        // Adicione seus autômatos aqui! A ordem importa.
+        // Ordem importa
         afds.add(new OperadoresSimples());
         afds.add(new Numeros());
         afds.add(new Identificadores());
         afds.add(new Mensagens ());
-      
     }
+
    // Método para pular espaços em branco, quebras de linha e tabs
-    public void skipWhiteSpace() {
+    private void skipWhiteSpace() {
         while (code.current() == ' ' || 
                code.current() == '\n' || 
                code.current() == '\t' || 
@@ -56,20 +48,21 @@ public class Lexer {
         throw new RuntimeException("Erro: token não reconhecido: " + code.current());
     }
 
-    // O método principal que vai ler o código inteiro e devolver a lista de tokens
-   // Método que faz a quebra de uma sentença em lexemas
+    // Método principal vai ler o código inteiro e devolver a lista de tokens
     public List<Token> getTokens() {
         Token t;
         do {
-            skipWhiteSpace();
+            skipWhiteSpace(); // Pula os espaços em branco antes de tentar reconhecer o próximo token
             t = searchNextToken();
             
-            if (t == null) {
+            if (t == null) { // Se nenhum autômato reconheceu um token, é um erro léxico
                 error();
+                break; // Para evitar loop infinito, embora o error() já lance uma exceção
             }
             
-            tokens.add(t);
-            
+            if (!t.tipo.equals("COMENTARIO")) { 
+                tokens.add(t); // Adiciona o token reconhecido à lista (se não for comentário)
+            }
         } while (!t.tipo.equals("EOF"));
         
         return tokens;

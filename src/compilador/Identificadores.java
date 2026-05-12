@@ -1,26 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
 
 import java.text.CharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author uniflferreira
- */
-public class Identificadores extends AFD {
+public class Identificadores extends AFD { // Reconhece palavras reservadas, identificadores de variáveis e identificadores de naves. Também tem um tratamento especial para o "acesso livre", que é um modificador de acesso.
 
-    private Map<String, String> palavrasReservadas;
+    private final Map<String, String> palavrasReservadas;
 
     public Identificadores() {
-        palavrasReservadas = new HashMap<>();
-        
-        // --- PREENCHENDO O DICIONÁRIO DA T-MINUS ---
-        
+        palavrasReservadas = new HashMap<>(); // Mapeia cada palavra reservada para seu tipo de token correspondente
+                
         // Tipos de Variáveis
         palavrasReservadas.put("Unidade", "tipo");
         palavrasReservadas.put("Precisao", "tipo");
@@ -43,8 +33,13 @@ public class Identificadores extends AFD {
         palavrasReservadas.put("abortar", "res_abortar");
         palavrasReservadas.put("percorrer", "res_percorrer");
         palavrasReservadas.put("orbita", "res_orbita");
+        palavrasReservadas.put("de",    "res_de");
+        palavrasReservadas.put("ate",   "res_ate");
+        palavrasReservadas.put("com",   "res_com");
+        palavrasReservadas.put("passo", "res_passo");
+        palavrasReservadas.put("onde", "res_onde");
 
-        // Operadores Relacionais (em formato de texto)
+        // Operadores Relacionais (t-minus trata em formato de texto)
         palavrasReservadas.put("maior_que", "op_rel");
         palavrasReservadas.put("menor_que", "op_rel");
         palavrasReservadas.put("maior_igual_que", "op_rel");
@@ -56,7 +51,7 @@ public class Identificadores extends AFD {
     }
 
     @Override
-    public Token evaluate(CharacterIterator code) {
+    public Token evaluate(CharacterIterator code) { // O processo de reconhecimento é o mesmo para palavras reservadas, id_nave e id_var, já que todos começam com letra e podem conter letras, números e underline. A distinção entre eles é feita no final, verificando as regras específicas de cada tipo.
         char current = code.current();
 
         // Se não começar com letra, esse autômato ignora
@@ -64,7 +59,7 @@ public class Identificadores extends AFD {
             return null;
         }
 
-        StringBuilder word = new StringBuilder();
+        StringBuilder word = new StringBuilder(); // Vai construindo a palavra enquanto for letra, número ou underline
 
         // Lê enquanto for letra, número ou underline (para pegar maior_que, etc)
         while (Character.isLetterOrDigit(code.current()) || code.current() == '_') {
@@ -72,9 +67,9 @@ public class Identificadores extends AFD {
             code.next();
         }
 
-        String lexema = word.toString();
+        String lexema = word.toString(); // Lê o lexema completo que foi lido
 
-        // --- O CHEFÃO: TRATAMENTO DO 'acesso livre' ---
+        // TRATAMENTO DO 'acesso livre'
         if (lexema.equals("acesso")) {
             int pos = code.getIndex(); // Salva a posição atual como um "checkpoint"
             
@@ -94,24 +89,24 @@ public class Identificadores extends AFD {
             if (nextWord.toString().equals("livre")) {
                 return new Token("mod_acesso", "acesso livre");
             } else {
-                // Se não era 'livre', volta para o "checkpoint" e segue a vida
+                // Se não era 'livre', volta para o checkpoint e segue
                 code.setIndex(pos);
             }
         }
 
-        // 1. Verifica se é uma palavra reservada
+        // Verifica se é uma palavra reservada
         if (palavrasReservadas.containsKey(lexema)) {
             return new Token(palavrasReservadas.get(lexema), lexema);
         }
 
-        // 2. Verifica se é um id_nave (tudo maiúsculo e mínimo de 2 caracteres)
+        // Verifica se é um id_nave (tudo maiúsculo e mínimo de 2 caracteres)
         boolean isNave = true;
         if (lexema.length() < 2) {
             isNave = false;
         } else {
             for (int i = 0; i < lexema.length(); i++) {
                 char c = lexema.charAt(i);
-                // Pode ter número no final, mas a primeira tem que ser letra
+                // Pode ter número no meio e fim, mas a primeira tem que ser letra
                 if (i == 0 && !Character.isUpperCase(c)) isNave = false;
                 if (!Character.isUpperCase(c) && !Character.isDigit(c)) isNave = false;
             }
@@ -120,7 +115,7 @@ public class Identificadores extends AFD {
             return new Token("id_nave", lexema);
         }
 
-        // 3. Se sobrou e passou por tudo, é uma variável comum
+        // Se sobrou e passou por tudo, é uma variável comum
         return new Token("id_var", lexema);
     }
 }

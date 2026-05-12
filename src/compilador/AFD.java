@@ -1,17 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
 import java.text.CharacterIterator; 
 
-/**
- *
- * @author uniflferreira
- */
-
-
-public abstract class AFD {
+public abstract class AFD { // Toda classe que herdar de AFD deve implementar o método evaluate, que tenta reconhecer um token a partir do estado atual do iterador de caracteres. Se conseguir, retorna o token; se não, retorna null para indicar que esse autômato não reconhece um token naquele ponto e o próximo autômato deve tentar.
     public abstract Token evaluate(CharacterIterator code); 
 
     public boolean isTokenSeparator(CharacterIterator code) { 

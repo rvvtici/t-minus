@@ -1,22 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
 
 import java.text.CharacterIterator;
 
-/**
- *
- * @author uniflferreira
- */
-public class Numeros extends AFD {
+public class Numeros extends AFD { // Autômato para reconhecer literais númericos: inteiros, decimais e com sufixos (f, l, b, s)
+
+    private void verificaSufixo(StringBuilder number, CharacterIterator code) { // Verifica se o sufixo é seguido por um separador de tokens (espaço, operador, fim de linha, etc). Se tiver outro caractere alfanumérico depois do sufixo, é um erro léxico (número mal formado).
+         if (!isTokenSeparator(code)) {
+            throw new RuntimeException("Erro léxico: número mal formado: " + number + code.current());
+        }
+    }
 
     @Override
     public Token evaluate(CharacterIterator code) {
         char current = code.current();
 
-        // Se o primeiro caractere não for um número, esse autômato falha e passa a vez
+        // Começa com dígito? (Se o primeiro caractere não for um número, esse autômato falha e passa a vez)
         if (!Character.isDigit(current)) {
             return null;
         }
@@ -24,13 +22,13 @@ public class Numeros extends AFD {
         StringBuilder number = new StringBuilder();
         boolean hasDot = false;
 
-        // 1. Lê a parte inteira
+        // Lê a parte inteira
         while (Character.isDigit(code.current())) {
             number.append(code.current());
             code.next();
         }
 
-        // 2. Verifica se tem ponto decimal
+        // Verifica se tem ponto decimal
         if (code.current() == '.') {
             hasDot = true;
             number.append('.');
@@ -43,30 +41,34 @@ public class Numeros extends AFD {
             }
         }
 
-        // 3. Verifica os sufixos especiais (f, l, b, s)
+        // Verifica se tem sufixos especiais (f, l, b, s)
         char suffix = code.current();
-        if (suffix == 'f' || suffix == 'F') {
-            number.append(suffix);
-            code.next();
-            return new Token("NUM_FLOAT", number.toString());
-            
-        } else if (suffix == 'l' || suffix == 'L') {
-            number.append(suffix);
-            code.next();
-            return new Token("NUM_LONG", number.toString());
-            
-        } else if (suffix == 'b' || suffix == 'B') {
-            number.append(suffix);
-            code.next();
-            return new Token("NUM_BYTE", number.toString());
-            
-        } else if (suffix == 's' || suffix == 'S') {
-            number.append(suffix);
-            code.next();
-            return new Token("NUM_SHORT", number.toString());
+        switch (suffix) {
+            case 'f', 'F' -> {
+                number.append(suffix); code.next();
+                verificaSufixo(number, code);
+                return new Token("NUM_FLOAT", number.toString());
+            }
+            case 'l', 'L' -> {
+                number.append(suffix); code.next();
+                verificaSufixo(number, code);
+                return new Token("NUM_LONG", number.toString());
+            }
+            case 'b', 'B' -> {
+                number.append(suffix); code.next();
+                verificaSufixo(number, code);
+                return new Token("NUM_BYTE", number.toString());
+            }
+            case 's', 'S' -> {
+                number.append(suffix); code.next();
+                verificaSufixo(number, code);
+                return new Token("NUM_SHORT", number.toString());
+            }
+            default -> { }
         }
+        
 
-        // 4. Se não teve nenhum sufixo, decide entre INT e DOUBLE pelo ponto
+        // Se não teve nenhum sufixo, decide entre INT e DOUBLE pelo ponto
         if (hasDot) {
             return new Token("NUM_DOUBLE", number.toString());
         } else {

@@ -1,24 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
 
-/**
- *
- * @author uniflferreira
- */
-public class Token {
+public class Token { // Representa um token reconhecido pelo analisador léxico, com seu tipo (categoria) e lexema (valor literal).
     String tipo; 
     String lexema; 
 
     public Token(String tipo, String lexema) {
-        this.tipo = tipo;
-        this.lexema = lexema;
+        this.tipo = tipo; // Categoria do token, como "id_var", "num_int", "res_nave", etc.
+        this.lexema = lexema; // Valor literal do token, como "x", "42", "nave", etc.
     }
 
     @Override 
-    public String toString() {
+    public String toString() { // Formata no padrão <tipo, lexema>
         return "<" + tipo + ", " + lexema + ">"; 
     }
 }

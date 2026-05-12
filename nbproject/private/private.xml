@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/AFD.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Identificadores.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Lexer.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Lexico.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Mensagens.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Node.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Numeros.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/OperadoresSimples.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Parser.java</file>
+            <file>file:/C:/Users/caeda/t-minus/src/compilador/Token.java</file>
+        </group>
+    </open-files>
+</project-private>

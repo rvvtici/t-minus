@@ -2,11 +2,7 @@ package compilador;
 
 import java.text.CharacterIterator;
 
-/**
- *
- * @author uniflferreira
- */
-public class OperadoresSimples extends AFD {
+public class OperadoresSimples extends AFD { // Autômato para reconhecer operadores simples: +, -, *, /, %, &&, ||, !, =, ==, !=, >, <, >=, <=, >>, <<
 
     @Override
     public Token evaluate(CharacterIterator code) {
@@ -16,12 +12,12 @@ public class OperadoresSimples extends AFD {
             return new Token("EOF", "$");
         }
 
-        // 1. Operadores Lógicos && e || (Precisam ter o par exato)
+        // Operadores Lógicos && e || (Precisam ter o par exato)
         if (current == '&') {
             code.next();
             if (code.current() == '&') {
                 code.next();
-                return new Token("op_log", "&&");
+                return new Token("op_log_e", "&&");
             }
             return null; // T-minus não aceita '&' sozinho
         }
@@ -30,12 +26,12 @@ public class OperadoresSimples extends AFD {
             code.next();
             if (code.current() == '|') {
                 code.next();
-                return new Token("op_log", "||");
+                return new Token("op_log_ou", "||");
             }
             return null; // T-minus não aceita '|' sozinho
         }
 
-        // 2. Família do '+' (+, ++, +=)
+        // Família do '+' (+, ++, +=)
         if (current == '+') {
             code.next(); 
             if (code.current() == '+') {
@@ -48,7 +44,7 @@ public class OperadoresSimples extends AFD {
             return new Token("op_soma", "+"); 
         }
 
-        // 3. Família do '-' (-, --, -=)
+        // Família do '-' (-, --, -=)
         if (current == '-') {
             code.next();
             if (code.current() == '-') {
@@ -61,9 +57,12 @@ public class OperadoresSimples extends AFD {
             return new Token("op_soma", "-"); 
         }
 
-        // 4. Família do '*' (*, *=)
+        // Família do '*' (*, *=)
         if (current == '*') {
             code.next();
+            if (code.current() == '*') { 
+                code.next(); return new Token("op_pot", "**"); 
+            }
             if (code.current() == '=') {
                 code.next();
                 return new Token("op_atrib_composto", "*=");
@@ -71,7 +70,7 @@ public class OperadoresSimples extends AFD {
             return new Token("op_mult", "*");
         }
 
-        // 5. Família do '/' (/, /=, //)
+        // Família do '/' (/, /=, //)
         if (current == '/') {
             code.next();
             if (code.current() == '=') {
@@ -80,7 +79,7 @@ public class OperadoresSimples extends AFD {
             } else if (code.current() == '/') {
                 // É um comentário! Consome tudo até a quebra de linha.
                 StringBuilder comentario = new StringBuilder("//");
-                code.next(); // consome a segunda barra
+                code.next(); // Consome a segunda barra
                 
                 while (code.current() != '\n' && code.current() != CharacterIterator.DONE) {
                     comentario.append(code.current());
@@ -91,26 +90,30 @@ public class OperadoresSimples extends AFD {
             return new Token("op_mult", "/"); 
         }
 
-        // 6. Operador '%' (Apenas simples)
+        // Operador '%' (Apenas simples)
         if (current == '%') {
             code.next();
             return new Token("op_mult", "%"); 
         }
 
-        // 7. Família do '=' (==, =>)
+        // Família do '=' (==>, =>)
         if (current == '=') {
-            code.next(); 
+            code.next();
             if (code.current() == '=') {
-                code.next(); 
-                return new Token("op_rel", "==");
-            } else if (code.current() == '>') {
-                code.next(); 
-                return new Token("op_atrib", "=>"); 
+                code.next();
+                if (code.current() == '>') {    // ==>
+                    code.next();
+                    return new Token("op_rel", "==>");
+                }
             }
-            return null; 
+            if (code.current() == '>') {        // =>
+                code.next();
+                return new Token("op_atrib", "=>");
+            }
+            return null; // = ou == sozinhos não existem
         }
 
-        // 8. Família do '>' (>, >>)
+        // Família do '>' (>, >>)
         if (current == '>') {
             code.next(); 
             if (code.current() == '>') {
@@ -120,7 +123,7 @@ public class OperadoresSimples extends AFD {
             return new Token("fecha_comando", ">"); 
         }
 
-        // 9. Família do '<' (<, <<)
+        // Família do '<' (<, <<)
         if (current == '<') {
             code.next();
             if (code.current() == '<') {
@@ -130,14 +133,20 @@ public class OperadoresSimples extends AFD {
             return new Token("abre_comando", "<"); 
         }
 
-        // 10. Família do '!' (!, !=)
+        // Família do '!' (!, !=)
         if (current == '!') {
             code.next();
             if (code.current() == '=') {
                 code.next();
                 return new Token("op_rel", "!="); 
             }
-            return new Token("op_log", "!"); 
+            return new Token("op_neg", "!"); 
+        }
+
+        // Separador de parâmetros e argumentos
+        if (current == ',') {
+            code.next();
+            return new Token("sep", ",");
         }
 
         return null; // Não é um operador conhecido por esta classe
