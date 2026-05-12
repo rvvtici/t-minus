@@ -2,10 +2,6 @@ package compilador;
 
 import java.text.CharacterIterator;
 
-/**
- *
- * @author uniflferreira
- */
 public class OperadoresSimples extends AFD {
 
     @Override

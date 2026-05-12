@@ -1,26 +1,16 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package compilador;
 
 import java.text.CharacterIterator;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- *
- * @author uniflferreira
- */
 public class Identificadores extends AFD {
 
     private Map<String, String> palavrasReservadas;
 
     public Identificadores() {
         palavrasReservadas = new HashMap<>();
-        
-        // --- PREENCHENDO O DICIONÁRIO DA T-MINUS ---
-        
+                
         // Tipos de Variáveis
         palavrasReservadas.put("Unidade", "tipo");
         palavrasReservadas.put("Precisao", "tipo");
@@ -74,7 +64,7 @@ public class Identificadores extends AFD {
 
         String lexema = word.toString();
 
-        // --- O CHEFÃO: TRATAMENTO DO 'acesso livre' ---
+        // TRATAMENTO DO 'acesso livre'
         if (lexema.equals("acesso")) {
             int pos = code.getIndex(); // Salva a posição atual como um "checkpoint"
             
@@ -99,12 +89,12 @@ public class Identificadores extends AFD {
             }
         }
 
-        // 1. Verifica se é uma palavra reservada
+        // Verifica se é uma palavra reservada
         if (palavrasReservadas.containsKey(lexema)) {
             return new Token(palavrasReservadas.get(lexema), lexema);
         }
 
-        // 2. Verifica se é um id_nave (tudo maiúsculo e mínimo de 2 caracteres)
+        // Verifica se é um id_nave (tudo maiúsculo e mínimo de 2 caracteres)
         boolean isNave = true;
         if (lexema.length() < 2) {
             isNave = false;
