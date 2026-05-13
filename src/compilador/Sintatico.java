@@ -3,9 +3,9 @@ package compilador;
 import java.util.List;
 
 public class Sintatico {
-
+    // TESTE: Script completo da T-minus para testar o sistema inteiro (happy path)
     static void testar(String nome, String codigo) {
-        System.out.println("══════════════════════════════════════════");
+        System.out.println("──────────────────────────────────────────");
         System.out.println("TESTE: " + nome);
         System.out.println("──────────────────────────────────────────");
         try {

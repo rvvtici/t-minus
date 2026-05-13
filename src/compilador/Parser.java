@@ -309,7 +309,7 @@ public class Parser {
             no.add(noTipo);
             no.add(noIdVar);
             no.add(noAtrib);
-            no.add(parseValorInicializador());
+            no.add(parseValorInicializador(noTipo.valor));
             return no;
         }
 
@@ -322,9 +322,10 @@ public class Parser {
 
     // Valor após '=>' numa declaração:
     // MENSAGEM | lit_bool | expr    
-    private Node parseValorInicializador() {
+    private Node parseValorInicializador(String tipo) {
         if (verifica(MENSAGEM))  return consome(MENSAGEM);
         if (verifica(LIT_BOOL))  return consome(LIT_BOOL);
+        if (tipo.equals("Sinal")) return parseExprRel();
         return parseExpr();
     }
 
@@ -507,7 +508,7 @@ public class Parser {
             Node atr = new Node("cmdAtribuicao");
             atr.add(noId);
             atr.add(noAtrib);
-            atr.add(parseValorInicializador());
+            atr.add(parseValorInicializador(""));
             return atr;
         }
 
