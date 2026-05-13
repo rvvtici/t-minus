@@ -24,6 +24,7 @@ public class Identificadores extends AFD { // Reconhece palavras reservadas, ide
 
         // Comandos e Estruturas
         palavrasReservadas.put("nave", "res_nave");
+        palavrasReservadas.put("acesso_livre", "mod_acesso");
         palavrasReservadas.put("iniciar_missao", "res_iniciar");
         palavrasReservadas.put("transmitir", "res_transmitir");
         palavrasReservadas.put("capturar", "res_capturar");
@@ -68,31 +69,6 @@ public class Identificadores extends AFD { // Reconhece palavras reservadas, ide
         }
 
         String lexema = word.toString(); // Lê o lexema completo que foi lido
-
-        // TRATAMENTO DO 'acesso livre'
-        if (lexema.equals("acesso")) {
-            int pos = code.getIndex(); // Salva a posição atual como um "checkpoint"
-            
-            // Pula os espaços em branco que dividem as duas palavras
-            while (code.current() == ' ' || code.current() == '\t' || code.current() == '\n') {
-                code.next();
-            }
-            
-            // Tenta ler a próxima palavra
-            StringBuilder nextWord = new StringBuilder();
-            while (Character.isLetter(code.current())) {
-                nextWord.append(code.current());
-                code.next();
-            }
-            
-            // Se for 'livre', formou o combo!
-            if (nextWord.toString().equals("livre")) {
-                return new Token("mod_acesso", "acesso livre");
-            } else {
-                // Se não era 'livre', volta para o checkpoint e segue
-                code.setIndex(pos);
-            }
-        }
 
         // Verifica se é uma palavra reservada
         if (palavrasReservadas.containsKey(lexema)) {

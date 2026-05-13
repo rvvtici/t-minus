@@ -262,10 +262,15 @@ public class Gerador {
     // O nó cmdCapturar pode ter layouts diferentes dependendo de como foi construído pelo Parser. Buscamos o id_var.
     private String gerarCapturar(Node no) {
         String varName = null;
+        String varTipo = null;
+
         for (Node f : no.filhos) {
             if (f.tipo.equals("id_var")) { varName = f.valor; break; }
+            if (f.tipo.equals("tipo"))    varTipo = tipoPascal(f.valor);
         }
         if (varName == null) return ind() + "readln; { capturar sem variável }\n";
+        if (varTipo != null) registraVar(varName + " : " + varTipo);
+
         return ind() + "readln(" + varName + ");\n";
     }
 
@@ -303,6 +308,7 @@ public class Gerador {
     private String gerarValor(Node no) {
         if (no.tipo.equals("MENSAGEM")) return no.valor;
         if (no.tipo.equals("lit_bool")) return litBool(no.valor);
+        if (no.tipo.equals("exprRel"))   return gerarExprRel(no);
         return gerarExpr(no);
     }
 
