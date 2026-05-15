@@ -60,9 +60,8 @@ public class Lexer { // O Lexer é a classe principal que vai ler o código font
                 break; // Para evitar loop infinito, embora o error() já lance uma exceção
             }
             
-            if (!t.tipo.equals("COMENTARIO")) { 
-                tokens.add(t); // Adiciona o token reconhecido à lista (se não for comentário)
-            }
+                tokens.add(t); // Adiciona o token reconhecido à lista
+            
         } while (!t.tipo.equals("EOF"));
         
         return tokens;
