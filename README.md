@@ -33,10 +33,10 @@ acesso_livre nave TESTE<<
 	Precisao velocidade => 27.5 
 	Sinal Estavel => ativo
 	Sinal Instavel => inativo
-	Mensagem planetaDestino => “Marte”
+	Mensagem planetaDestino => "Marte"
 	Estimativa gravidade => 9.8f
 	Distancia Estelar => 9460730472580800
-	Pulso codMissao => “A”
+	Pulso codMissao => "A"
 	Carga nivelRadiacao => 127           
 	Eco anguloOrbital => 360
 
@@ -106,14 +106,14 @@ acesso_livre nave TESTE<<
 		Sinal permitido => inativo
 		trajeto<nivel menor_que 20>  << 
 			trajeto <permitido> <<
-				transmitir<”Boa viagem!”>
+				transmitir<"Boa viagem!">
 			>> abortar <<
 				transmitir<"Retorne a nave mae!">
 			>> 
 		>> recalcular trajeto <nivel menor_que 50>  << 
 			transmitir<"Baixo"> 
 		>> recalcular trajeto <nivel maior_que 100> <<
-				transmitir<”Alto!”>
+				transmitir<"Alto!">
 		>> abortar << 
 			transmitir<"OK"> 
 		>>
@@ -125,7 +125,7 @@ acesso_livre nave TESTE<<
 			>>
 		>>
 	>>
->> 
+>>
 ```
 
 #### Sad Path
@@ -145,10 +145,10 @@ acesso_livre nave TESTE <<
 - Duas classes em um só programa:
 ```
 acesso_livre nave TESTE << 
-	transmitir<”Ola, terraqueos!”> 
+	transmitir<"Ola, terraqueos!"> 
 >> 
 acesso_livre nave TESTE2 <> << 
-	transmitir<”Ola, marcianos!“> 
+	transmitir<"Ola, marcianos!"> 
 >> 
 ```
 Para mais exemplos, consulte exemplos-codigo.md.
