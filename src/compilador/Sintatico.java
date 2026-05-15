@@ -22,40 +22,40 @@ public class Sintatico {
 
         // 1. Nave vazia
         testar("Nave vazia",
-            "acesso livre nave MISSAO << >>"
+            "acesso_livre nave MISSAO << >>"
         );
 
         // 2. Transmitir string
         testar("Transmitir string",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  transmitir<\"Ignicao iniciada\">\n" +
             ">>"
         );
 
         // 3. Declaração com atribuição
         testar("Declaração inteira",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade combustivel => 100\n" +
             ">>"
         );
 
         // 4. Declaração sem atribuição
         testar("Declaração sem valor",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade combustivel\n" +
             ">>"
         );
 
         // 5. Capturar com tipo
         testar("Capturar com tipo",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade combustivel => capturar\n" +
             ">>"
         );
 
         // 6. Capturar sem tipo
         testar("Capturar sem tipo",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade combustivel\n" +
             "  combustivel => capturar\n" +
             ">>"
@@ -63,7 +63,7 @@ public class Sintatico {
 
         // 7. Condicional simples
         testar("Trajeto simples",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade nivel => 30\n" +
             "  trajeto<nivel menor_que 50> <<\n" +
             "    transmitir<\"Nivel critico\">\n" +
@@ -73,7 +73,7 @@ public class Sintatico {
 
         // 8. Condicional com else (abortar)
         testar("Trajeto com abortar",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade nivel => 30\n" +
             "  trajeto<nivel menor_que 50> <<\n" +
             "    transmitir<\"Nivel critico\">\n" +
@@ -86,7 +86,7 @@ public class Sintatico {
 
         // 9. Condicional com else if (recalcular)
         testar("Trajeto com recalcular",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade nivel => 30\n" +
             "  trajeto<nivel menor_que 20> <<\n" +
             "    transmitir<\"Critico\">\n" +
@@ -102,21 +102,21 @@ public class Sintatico {
 
         // 10. Expressão aritmética
         testar("Expressão aritmética",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade resultado => 2 + 3 * 4\n" +
             ">>"
         );
 
         // 11. Potência
         testar("Potência",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade resultado => 2 ** 8\n" +
             ">>"
         );
 
         // 12. Função com retorno
         testar("Função com retorno",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade dobrar<Unidade x> <<\n" +
             "    retornar x + x\n" +
             "  >>\n" +
@@ -125,7 +125,7 @@ public class Sintatico {
 
         // 13. Chamada de função
         testar("Chamada de função",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  Unidade dobrar<Unidade x> <<\n" +
             "    retornar x + x\n" +
             "  >>\n" +
@@ -135,7 +135,7 @@ public class Sintatico {
 
         // 14. Orbita (while)
         testar("Orbita",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  orbita<Unidade i onde i menor_que 10> <<\n" +
             "    transmitir<i>\n" +
             "  >>\n" +
@@ -144,7 +144,7 @@ public class Sintatico {
 
         // 15. Percorrer (for)
         testar("Percorrer",
-            "acesso livre nave MISSAO <<\n" +
+            "acesso_livre nave MISSAO <<\n" +
             "  percorrer<Unidade de i 0 ate 10 com passo 1> <<\n" +
             "    transmitir<i>\n" +
             "  >>\n" +
