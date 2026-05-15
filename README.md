@@ -25,20 +25,131 @@ java compilador.Main
 Um código na linguagem T-minus deve ser inserido e, em uma linha vazia, deve ser digitado "FIM" para printar o equivalente na linguagem Pascal ou "tree" para printar a árvore sintática (ASD) do código.
 
 ## Exemplos de Código 
-#### Exemplo com Main e Print
+#### Happy Path
 ```
-//T-Minus [Entrada]
 acesso_livre nave TESTE<<
+	// Declaracao de tipos
+	Unidade combustivel 
+	Precisao velocidade => 27.5 
+	Sinal Estavel => ativo
+	Sinal Instavel => inativo
+	Mensagem planetaDestino => “Marte”
+	Estimativa gravidade => 9.8f
+	Distancia Estelar => 9460730472580800
+	Pulso codMissao => “A”
+	Carga nivelRadiacao => 127           
+	Eco anguloOrbital => 360
+
+	// Operacoes Aritmeticas
+	Precisao calculo => combustivel * velocidade
+	Unidade resto => combustivel % 3
+	Precisao media => <combustivel + velocidade> / 2
+	Unidade decremento => combustivel - 10
+    Unidade resultado => 2 ** 8
+
+	// Operacoes Logicas
+	Sinal maisRapido => velocidade maior_que 20.0
+	Sinal maisLento => velocidade menor_que 20.0
+	Sinal igualOuMaior => combustivel maior_igual_que 100
+	Sinal igualOuMenor => combustivel menor_igual_que 100
+	Sinal igual => combustivel ==> 100
+	Sinal diferente => combustivel != 100
+	Sinal missaoOk => sistemaEstavel && combustivel maior_que 50
+	Sinal alertaGeral => !sistemaEstavel || combustivel menor_que 10
+
+	// Declaracao de Funcao
+	Unidade dobrar<Unidade x> <<
+				retornar x + x
+	>>
+
+	// Main
 	acesso_livre iniciar_missao <> <<
+		// Chamada da funcao
+		Unidade luasDeMarte => 2
+		dobrar<luasDeMarte>
+
+		 // Print com String
     	transmitir<"Missao iniciada">
- >>
->>
+
+		// Print com variavel
+		transmitir<resultado>
+
+		// Leitura
+		combustivel => capturar
+	
+		// Condicional (if/else if/else)
+		trajeto<combustivel menor_que 20> <<
+			transmitir<"Critico">
+			>>  recalcular trajeto<combustivel menor_que 50> <<
+			transmitir<"Baixo">
+			>> abortar <<
+			transmitir<"OK">
+		>>
+
+		// Laco for com passo 1
+		percorrer<Unidade de i 0 ate 10 com passo 1> <<
+			transmitir<i>
+		>>
+
+		// Laco for com passo maior que um
+		percorrer<Unidade de i 0 ate 10 com passo 2> <<
+			transmitir<i>
+		>>
+
+		// While
+		orbita<Unidade i onde i menor_que 10> <<
+			transmitir<i>
+		>>
+
+		// Condicional encadeada
+		Unidade nivel => 10
+		Sinal permitido => inativo
+		trajeto<nivel menor_que 20>  << 
+			trajeto <permitido> <<
+				transmitir<”Boa viagem!”>
+			>> abortar <<
+				transmitir<"Retorne a nave mae!">
+			>> 
+		>> recalcular trajeto <nivel menor_que 50>  << 
+			transmitir<"Baixo"> 
+		>> recalcular trajeto <nivel maior_que 100> <<
+				transmitir<”Alto!”>
+		>> abortar << 
+			transmitir<"OK"> 
+		>>
+
+	// Laco encadeado
+		percorrer<Unidade de i 0 ate 10 com passo 1> <<
+			percorrer <Unidade de j 0 ate 9 com passo 1> <<
+				transmitir<i + j>
+			>>
+		>>
+	>>
+>> 
 ```
-#### Exemplo com Leitura (scanf)
+
+#### Sad Path
+- Declaração sem classe:
 ```
-acesso_livre nave HAILMARY <<          
-        Unidade combustivel => capturar
->>
+Unidade combustivel 
+Precisao velocidade => 27.5 
+```
+- Transmitir sem parâmetro:
+```
+acesso_livre nave TESTE << 
+	acesso_livre iniciar_missao <Unidade final> << 
+		transmitir<> 
+	>> 
+>> 
+```
+- Duas classes em um só programa:
+```
+acesso_livre nave TESTE << 
+	transmitir<”Ola, terraqueos!”> 
+>> 
+acesso_livre nave TESTE2 <> << 
+	transmitir<”Ola, marcianos!“> 
+>> 
 ```
 Para mais exemplos, consulte exemplos-codigo.md.
 

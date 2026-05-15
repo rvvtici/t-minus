@@ -42,6 +42,21 @@ public class Main {
                 String pascal = new Gerador().gerar(raiz);
                 System.out.println(pascal);
 
+                System.out.println("\nDeseja visualizar a lista de tokens? (S/N)");
+                
+                String tokensResp = scanner.nextLine();
+
+                if (tokensResp.equalsIgnoreCase("S")) {
+                    System.out.println("\nLISTA DE TOKENS");
+                    System.out.println("──────────────────────────────────────────");
+
+                    for (Token t : tokens) {
+                        System.out.println(
+                            "<" + t.tipo + ", " + t.lexema + ">"
+                        );
+                    }
+                }
+
                 System.out.println("\nDeseja visualizar a AST? (S/N)");
 
                 String arvore = scanner.nextLine();
@@ -63,7 +78,7 @@ public class Main {
             String resposta = scanner.nextLine();
 
             if (!resposta.equalsIgnoreCase("S")) {
-                System.out.println("Encerrando compilador... Obrigado por usar o T-Minus!");
+                System.out.println("Encerrando o compilador... Obrigado por usar o T-Minus!");
                 break;
             }
         }
