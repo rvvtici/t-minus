@@ -1,6 +1,6 @@
 # 🚀 T-minus
 
-## Descrição da Linguagem
+## Objetivo do Projeto
 T-minus é uma linguagem de programação didática e experimental, inspirada em Java, com temática espacial. Sua narrativa é de modelar a execução de programas como missões espaciais, nas quais as classes representam naves e os métodos representam comandos ou etapas da missão. Desenvolvida como prova de conceito. Permite algoritmos básicos e simulações lógicas.
 
 ## Linguagem Base e Tradutora
