@@ -11,8 +11,107 @@ A linguagem foi desenvolvida em Java e o compilador da linguagem foi pensado par
 cd src/compilador
 javac *.java
 cd ..
-java compilador.Main
+java compilador.Main 
 ```
+
+## Explicação da Main
+Um código na linguagem T-Minus deve ser inserido e, em uma linha vazia, deve ser digitado "FIM" para printar o equivalente na linguagem Pascal ou "tree" para printar a árvore sintática (ASD) do código.
+
+## Exemplos de Código 
+#### Exemplo com Main e Print
+```
+//T-Minus [Entrada]
+acesso_livre nave TESTE<<
+	acesso_livre iniciar_missao <> <<
+    	transmitir<"Missao iniciada">
+ >>
+>>
+```
+
+#### Exemplo com Leitura (scanf)
+```
+acesso_livre nave HAILMARY <<          
+        Unidade combustivel => capturar
+>>
+```
+
+#### Exemplo com Condicional (if / else if / else)
+```
+acesso_livre nave HAILMARY <<
+            Unidade nivel => 30
+            trajeto<nivel menor_que 20> <<
+                 transmitir<"Critico">
+           >>  recalcular trajeto<nivel menor_que 50> <<
+            	transmitir<"Baixo">
+            >> abortar <<
+           		transmitir<"OK">
+            >>
+>>
+
+```
+
+#### Exemplo com While
+
+```
+acesso_livre nave HAILMARY <<
+            Unidade nivel => 30
+            trajeto<nivel menor_que 20> <<
+                 transmitir<"Critico">
+           >>  recalcular trajeto<nivel menor_que 50> <<
+            	transmitir<"Baixo">
+            >> abortar <<
+           		transmitir<"OK">
+            >>
+>>
+```
+
+#### Exemplo com Declaração de Função
+```
+acesso_livre nave HAILMARY <<
+          Unidade dobrar<Unidade x> <<
+            	retornar x + x
+          >>
+>>
+```
+
+#### Exemplo Chamada de Função
+
+```
+acesso_livre nave HAILMARY <<
+           Unidade dobrar<Unidade x> <<
+            	retornar x + x
+            >>
+            Unidade resultado => dobrar<10>
+            transmitir<resultado>
+>>
+```
+
+#### Exemplo de For (com passo um)
+```
+acesso_livre nave HAILMARY <<
+         	percorrer<Unidade de i 0 ate 10 com passo 1> <<
+                 transmitir<i>
+            >>
+>>
+```
+
+
+## Conferir Todos os Tokens
+```
+cd src/compilador
+javac *.java
+cd ..
+java compilador.Lexico
+```
+
+## Exemplos de Códigos e Respectivas Árvores Sintáticas
+```
+cd src/compilador
+javac *.java
+cd ..
+java compilador.Sintatico 
+```
+
 
 ## Características da Linguagem Criada
 
@@ -25,24 +124,6 @@ acesso_livre serve como modificador de acesso, equivalente ao public do java. É
 - T-minus não possui delimitador de fim de comando (;), a quebra de linha fica com esse papel
 - Os operadores de atribuição e igualdade são tratados como setas (=> e ==>). Não existe = sozinho em T-minus.
 - Há algumas palavras-chave no laço for e while (percorrer e orbita) que não são identificadas pela AST (servem apenas esteticamente para os comandos). Os lexemas são: de, ate, com e passo.
-
-## Exemplos de Código e Tradução Equivalente 
-#### Exemplo com Main e Print
-```
-//T-Minus [Entrada]
-acesso_livre nave TESTE<<
-	acesso_livre iniciar_missao <> <<
-    	transmitir<"Missao iniciada">
- >>
->>
-
-//Pascal [Saída]
-program TESTE;
-begin
-    writeln("Missao iniciada");
-end.
-
-```
 
 ## Autoria
 Desenvolvido por **Ana Lima**, **Luana De Almeida** e **Ravi Macedo**.
