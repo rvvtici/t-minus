@@ -2,23 +2,25 @@
 
 ## Exemplo com Main e Print
 #### T-Minus
+```
 acesso_livre nave TESTE<<
 	acesso_livre iniciar_missao <> <<
     	transmitir<"Missao iniciada">
  >>
 >>
-
+```
 #### Pascal
+```
 program TESTE;
 
 begin
     writeln("Missao iniciada");
 end.
-
-
+```
 
 ## Exemplo com Declaração de tipos e variáveis pt. 1
 #### T-Minus
+```
 acesso_livre nave TESTE<<
 Unidade combustivel => 100
 Precisao velocidade => 27.5
@@ -31,8 +33,10 @@ Pulso codMissao => “A”
 Carga nivelRadiacao => 127           
 Eco anguloOrbital => 360
 >>
+```
 
 #### Pascal
+```
 program TESTE;
 
 var
@@ -59,11 +63,11 @@ begin
   nivelRadiacao := 127;
   anguloOrbital := 360;
 end.
-
-
+```
 
 ## Exemplo com Declaração de tipos e variáveis pt. 2
 #### T-Minus
+```
 acesso_livre nave TESTE<<
 Precisao calculo => combustivel * velocidade
 Unidade resto => combustivel % 3
@@ -79,9 +83,10 @@ Sinal diferente => combustivel != 100
 Sinal missaoOk => sistemaEstavel && combustivel maior_que 50
 Sinal alertaGeral => !sistemaEstavel || combustivel menor_que 10
 >>
-
+```
 
 #### Pascal
+```
 program TESTE;
 
 var
@@ -112,19 +117,18 @@ begin
   missaoOk := sistemaEstavel and combustivel > 50;
   alertaGeral := not sistemaEstavel or combustivel < 10;
 end.
-
-
-
-
+```
 
 ## Exemplo com Leitura (scanf)
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<          
         Unidade combustivel => capturar
 >>
-
+```
 
 #### Pascal
+```
 program HAILMARY;
 
 var
@@ -133,17 +137,19 @@ var
 begin
   readln(combustivel);
 end.
-
-
+```
 
 ## Exemplo com Expressão Aritmética
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<          
  Unidade resultado => 2 + 3 * 4
     	 transmitir<resultado>
 >>
+```
 
 #### Pascal
+```
 program HAILMARY;
 
 var
@@ -153,17 +159,19 @@ begin
   resultado := 2 + 3 * 4;
   writeln(resultado);
 end.
-
-
+```
 
 ## Exemplo com Potência
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<
         Unidade resultado => 2 ** 8
         transmitir<resultado>
 >>
+```
 
 #### Pascal
+```
 program HAILMARY;
 uses Math;
 
@@ -174,14 +182,11 @@ begin
   resultado := Power(2, 8);
   writeln(resultado);
 end.
-
-
-
-
-
+```
 
 ## Exemplo com Condicional (if / else if / else)
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<
             Unidade nivel => 30
             trajeto<nivel menor_que 20> <<
@@ -192,8 +197,11 @@ acesso_livre nave HAILMARY <<
            		transmitir<"OK">
             >>
 >>
+```
 
 #### Pascal
+
+```
 program HAILMARY;
 
 var
@@ -213,10 +221,11 @@ begin
   begin
     writeln("OK");
   end;
-
+```
 
 ## Exemplo com While
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<
            orbita<Unidade i onde i menor_que 10> <<
           	    transmitir<i>
@@ -235,19 +244,20 @@ begin
     writeln(i);
   end;
 end.
-
-
+```
 
 ## Exemplo com For (passo um)
 #### T-Minus
-
+```
 acesso_livre nave HAILMARY <<
          	percorrer<Unidade de i 0 ate 10 com passo 1> <<
                  transmitir<i>
             >>
 >>
+```
 
 #### Pascal
+```
 program HAILMARY;
 
 var
@@ -259,21 +269,20 @@ begin
     writeln(i);
   end;
 end.
-
-
-
-
-
+```
 
 ## Exemplo com For (passo maior que um)
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<
          	percorrer<Unidade de i 0 ate 10 com passo 2> <<
                  transmitir<i>
             >>
 >>
+```
 
 #### Pascal
+```
 program HAILMARY;
 
 var
@@ -289,20 +298,22 @@ begin
     i := i + _passo_i;
   end;
 end.
-
+```
 
 
 ## Exemplo com Declaração de Função
 
 #### T-Minus
-
+```
 acesso_livre nave HAILMARY <<
           Unidade dobrar<Unidade x> <<
             	retornar x + x
           >>
 >>
+```
 
 #### Pascal
+```
 program HAILMARY;
 
   function dobrar(x : integer) : integer;
@@ -313,11 +324,12 @@ program HAILMARY;
 
 begin
 end.
-
+```
 
 
 ## Exemplo com Chamada de Função
 #### T-Minus
+```
 acesso_livre nave HAILMARY <<
            Unidade dobrar<Unidade x> <<
             	retornar x + x
@@ -325,9 +337,10 @@ acesso_livre nave HAILMARY <<
             Unidade resultado => dobrar<10>
             transmitir<resultado>
 >>
-
+```
 
 #### Pascal
+```
 program HAILMARY;
 
 var
@@ -343,3 +356,4 @@ begin
   resultado := dobrar(10);
   writeln(resultado);
 end.
+```
