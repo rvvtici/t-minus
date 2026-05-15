@@ -226,6 +226,7 @@ public class Gerador {
             case "cmdFuncao" -> gerarFuncao(no);
             case "cmdChamada" -> gerarChamada(no) + ";\n";
             case "cmdRetorno" -> gerarRetorno(no);
+            case "COMENTARIO" -> ind() + "{ " + no.valor.replace("//", "").trim() + " }\n";            
             default -> ind() + "{ ??? " + no.tipo + " }\n";
         };
     }
