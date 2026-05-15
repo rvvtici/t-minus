@@ -97,6 +97,7 @@ public class Parser {
     private static final String NUM_BYTE     = "NUM_BYTE";
     private static final String NUM_LONG     = "NUM_LONG";
     private static final String LIT_BOOL     = "lit_bool";
+    private static final String COMENTARIO = "COMENTARIO";
     private static final String EOF          = "EOF";
 
     // Palavras-chave do percorrer e orbita
@@ -152,6 +153,9 @@ public class Parser {
     // prog → mod_acesso 'nave' id_nave '{' bloco '}'
     public Node parseProg() {
         Node no = new Node("prog");
+        while (verifica(COMENTARIO)) {
+            no.add(consome(COMENTARIO));
+        }
         no.add(consome(MOD_ACESSO));
         no.add(consome(RES_NAVE));
         no.add(consome(ID_NAVE));
@@ -215,6 +219,9 @@ public class Parser {
 
         // ── id_var → chamada OU atribuição por capturar ───────────
         if (verifica(ID_VAR))          return parseCmdChamadaOuCapturar();
+
+        // ── comentário (ignorado, não vira nó na AST) ─────────────
+        if (verifica(COMENTARIO))      return consome(COMENTARIO);
 
         erro("Comando inesperado: <" + corrente.tipo + ", " + corrente.lexema + ">");
         return null; // inalcançável
