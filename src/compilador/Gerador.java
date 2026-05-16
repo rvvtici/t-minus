@@ -248,7 +248,7 @@ public class Gerador {
             if (f.tipo.equals("op_soma")) {
                 sb.append(" + ");
             } else if (f.tipo.equals("MENSAGEM")) {
-                sb.append(f.valor); // já vem com as aspas do lexer
+                sb.append(f.valor.replace("\"", "'")); // já vem com as aspas do lexer
             } else {
                 sb.append(gerarExpr(f));
             }
@@ -307,7 +307,7 @@ public class Gerador {
 
     // Gera o valor de um inicializador (MENSAGEM, lit_bool, expr).
     private String gerarValor(Node no) {
-        if (no.tipo.equals("MENSAGEM")) return no.valor;
+        if (no.tipo.equals("MENSAGEM")) return no.valor.replace("\"", "'");
         if (no.tipo.equals("lit_bool")) return litBool(no.valor);
         if (no.tipo.equals("exprRel"))   return gerarExprRel(no);
         return gerarExpr(no);
@@ -548,7 +548,7 @@ public class Gerador {
         Node valor = no.filhos.get(1);
         String v;
         if (valor.tipo.equals("lit_bool"))  v = litBool(valor.valor);
-        else if (valor.tipo.equals("MENSAGEM")) v = valor.valor;
+        else if (valor.tipo.equals("MENSAGEM")) v = valor.valor.replace("\"", "'");
         else v = gerarExpr(valor);
 
         return ind() + "Result := " + v + ";\n" + ind() + "Exit;\n";
