@@ -14,7 +14,7 @@ acesso_livre nave TESTE<<
 program TESTE;
 
 begin
-    writeln("Missao iniciada");
+    writeln('Missao iniciada');
 end.
 ```
 
@@ -26,10 +26,10 @@ Unidade combustivel => 100
 Precisao velocidade => 27.5
 Sinal Estavel => ativo
 Sinal Instavel => inativo
-Mensagem planetaDestino => “Marte”
+Mensagem planetaDestino => "Marte"
 Estimativa gravidade => 9.8
 Distancia Estelar => 9460730472580800
-Pulso codMissao => “A”
+Pulso codMissao => "A"
 Carga nivelRadiacao => 127           
 Eco anguloOrbital => 360
 >>
@@ -56,10 +56,10 @@ begin
   velocidade := 27.5;
   Estavel := true;
   Instavel := false;
-  planetaDestino := "Marte";
+  planetaDestino := 'Marte';
   gravidade := 9.8;
   Estelar := 9460730472580800;
-  codMissao := "A";
+  codMissao := 'A';
   nivelRadiacao := 127;
   anguloOrbital := 360;
 end.
@@ -211,15 +211,15 @@ begin
   nivel := 30;
   if nivel < 20 then
   begin
-    writeln("Critico");
+    writeln('Critico');
   end
   else if nivel < 50 then
   begin
-    writeln("Baixo");
+    writeln('Baixo');
   end
   else
   begin
-    writeln("OK");
+    writeln('OK');
   end;
 ```
 
