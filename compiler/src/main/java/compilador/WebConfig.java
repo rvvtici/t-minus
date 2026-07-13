@@ -10,7 +10,10 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/api/**")
-                .allowedOrigins("https://rvvtici.vercel.app/") // origem do seu Next.js local
+                .allowedOrigins(
+                        "http://localhost:3000",
+                        "https://rvvtici.vercel.app/" // troque pelo seu domínio real da Vercel
+                )
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
