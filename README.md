@@ -1,13 +1,12 @@
-# 🚀 T-minus
+# T-Minus
 
 ## Objetivo do Projeto
 T-minus é uma linguagem de programação didática e experimental, inspirada em Java, com temática espacial. Sua narrativa é de modelar a execução de programas como missões espaciais, nas quais as classes representam naves e os métodos representam comandos ou etapas da missão. Desenvolvida como prova de conceito. Permite algoritmos básicos e simulações lógicas.
 
 ## Desenvolvimento da Linguagem
-Para o seu desenvolvimento, foi necessário compreender a funcionalidade dos analisadores léxico e sintático. A parte léxica da linguagem é responsável por criar expressões regulares que atribuem um token à cada valor e lexema no formato <VALOR, LEXEMA>. Um exemplo de token é <NUM_INT, [-+]?[0-9]+>, que representa um numero inteiro de um ou mais dígitos e que pode ou não ser iniciado por um sinal. A lista de todos os tokens está disponível no Lexico.java e as instruções para acesso estão em (Acessar Lista de Tokens Conhecidos)[#acessar-lista-de-tokens-conhecidos]. Já a parte sintática da linguagem cria a gramática e estrutura em que ordem cada token deve ser inserido. Por exemplo, a gramática para o "for" da linguagem é 
-```
+Para o seu desenvolvimento, foi necessário compreender a funcionalidade dos analisadores léxico e sintático. A parte léxica da linguagem é responsável por criar expressões regulares que atribuem um token à cada valor e lexema no formato <VALOR, LEXEMA>. Um exemplo de token é <NUM_INT, [-+]?[0-9]+>, que representa um numero inteiro de um ou mais dígitos e que pode ou não ser iniciado por um sinal. A lista de todos os tokens está disponível no Lexico.java e as instruções para acesso estão em (Acessar Lista de Tokens Conhecidos)[#acessar-lista-de-tokens-conhecidos]. Já a parte sintática da linguagem cria a gramática e estrutura em que ordem cada token deve ser inserido. Por exemplo, a gramática para o "for" da linguagem é:
 cmdPercorrer → 'percorrer' abre_comando tipo ‘de’ id_var expr 'ate' expr 'com passo' expr fecha_comando abre_transmissao bloco fecha_transmissao.
-```
+
 A lista da gramática inteira está localizada em gramatica.md.
 
 ## Linguagem Base e Tradutora

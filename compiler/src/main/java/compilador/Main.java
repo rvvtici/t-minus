@@ -1,12 +1,12 @@
 package compilador;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in, "UTF-8");
+        CompilerService service = new CompilerService();
 
         while (true) {
 
@@ -33,26 +33,22 @@ public class Main {
             System.out.println("──────────────────────────────────────────");
 
             try {
-                List<Token> tokens = new Lexer(codigo.toString()).getTokens();
-                Node raiz = new Parser(tokens).parseProg();
+                CompilerService.ResultadoCompilacao resultado = service.compilar(codigo.toString());
 
                 System.out.println("PASCAL GERADO:");
                 System.out.println("──────────────────────────────────────────");
-
-                String pascal = new Gerador().gerar(raiz);
-                System.out.println(pascal);
+                System.out.println(resultado.pascal);
 
                 System.out.println("\nDeseja visualizar a lista de tokens? (S/N)");
-                
                 String tokensResp = scanner.nextLine();
 
                 if (tokensResp.equalsIgnoreCase("S")) {
                     System.out.println("\nLISTA DE TOKENS");
                     System.out.println("──────────────────────────────────────────");
 
-                    for (Token t : tokens) {
+                    for (Token t : resultado.tokens) {
                         System.out.println(
-                            "<" + t.tipo + ", " + t.lexema + ">"
+                                "<" + t.tipo + ", " + t.lexema + ">"
                         );
                     }
                 }
@@ -66,7 +62,7 @@ public class Main {
                     System.out.println("\nÁRVORE SINTÁTICA (AST)");
                     System.out.println("──────────────────────────────────────────");
 
-                    raiz.imprimir();
+                    resultado.ast.imprimir();
                 }
 
             } catch (Exception e) {
