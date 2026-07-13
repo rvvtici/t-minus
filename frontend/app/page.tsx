@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 
-// Troque pela URL do Render quando fizer o deploy
-const API_URL = 'http://localhost:8080/api/compilar';
+const API_URL = 'https://t-minus-r53c.onrender.com/api/compilar';
 
 export default function Compilador() {
   const [codigo, setCodigo] = useState('');
