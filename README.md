@@ -1,4 +1,6 @@
-# 🚀 T-Minus
+# T-Minus
+
+https://rvvtici.vercel.app/t-minus
 
 ## Objetivo do Projeto
 T-Minus é uma linguagem de programação desenvolvida em Java e com compilador para Pascal. Com temática espacial e inspiração em missões espaciais, sua narrativa é modelar a execução de programas nos quais as classes representam naves e os métodos representam comandos ou etapas da missão. Desenvolvida como prova de conceito, teve como objetivo compreender a complexidade por trás das linguagens de programação e compiladores. Dessa forma, são permitidos algoritmos básicos e simulações lógicas.
